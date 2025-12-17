@@ -417,6 +417,36 @@ const gsap = window.gsap || {
     }
 };
 
+// Animated counters for stats
+function animateCounter(element, target, duration = 2000) {
+    let start = 0;
+    const increment = target / (duration / 16);
+    const timer = setInterval(() => {
+        start += increment;
+        if (start >= target) {
+            element.textContent = target + (element.parentElement.querySelector('.stat-label').textContent.includes('Satisfaction') ? '%' : '');
+            clearInterval(timer);
+        } else {
+            element.textContent = Math.floor(start) + (element.parentElement.querySelector('.stat-label').textContent.includes('Satisfaction') ? '%' : '');
+        }
+    }, 16);
+}
+
+// Initialize counters when home section is visible
+let countersAnimated = false;
+function initCounters() {
+    if (!countersAnimated) {
+        document.querySelectorAll('.stat-number').forEach(stat => {
+            const target = parseInt(stat.getAttribute('data-target'));
+            animateCounter(stat, target);
+        });
+        countersAnimated = true;
+    }
+}
+
+// Start counters after page load
+setTimeout(initCounters, 1000);
+
 // Start animation
 animate();
 
